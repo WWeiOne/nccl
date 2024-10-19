@@ -1824,8 +1824,11 @@ ncclResult_t ncclIbMultiSend(struct ncclIbSendComm* comm, int slot) {
 
 ncclResult_t ncclIbIsend(void* sendComm, void* data, int size, int tag, void* mhandle, void** request) {
   struct ncclIbSendComm* comm = (struct ncclIbSendComm*)sendComm;
-  if (comm->base.ready == 0) { WARN("NET/IB: ncclIbIsend() called when comm->base.ready == 0"); return ncclInternalError; }
-  if (comm->base.ready == 0) { *request = NULL; return ncclSuccess; }
+  if (comm->base.ready == 0) { 
+    WARN("NET/IB: ncclIbIsend() called when comm->base.ready == 0"); 
+    *request = NULL;
+    return ncclInternalError; 
+  }
   NCCLCHECK(ncclIbStatsCheckFatalCount(&comm->base.stats,__func__));
 
   struct ncclIbMrHandle* mhandleWrapper = (struct ncclIbMrHandle*) mhandle;
